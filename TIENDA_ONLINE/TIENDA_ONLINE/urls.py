@@ -7,6 +7,8 @@ from mainApp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("producto/<int:producto_id>/", views.producto_detalle, name="producto_detalle"),
+    path("producto/<int:producto_id>/solicitar/", views.solicitar_producto, name="solicitar_producto"),
     path('', views.cliente, name="cliente"),
 ]
 
