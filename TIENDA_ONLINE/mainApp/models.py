@@ -28,6 +28,8 @@ class Producto(models.Model):
     imagen_1 = models.ImageField(upload_to="productos/", blank=True, null=True)
     imagen_2 = models.ImageField(upload_to="productos/", blank=True, null=True)
     imagen_3 = models.ImageField(upload_to="productos/", blank=True, null=True)
+    destacado = models.BooleanField(default=False)
+    
     class Meta:
         ordering = ["nombre"]
     def __str__(self):

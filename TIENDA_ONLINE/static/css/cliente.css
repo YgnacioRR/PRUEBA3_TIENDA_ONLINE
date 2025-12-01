@@ -1,0 +1,164 @@
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    background: #f5f5f5;
+    color: #111827;
+}
+
+.cabecera {
+    padding: 1.5rem 2rem;
+    background: #111827;
+    color: white;
+}
+
+.cabecera h1 {
+    margin: 0;
+    font-size: 1.6rem;
+}
+
+.cabecera h2 {
+    margin: 0.25rem 0 0;
+    font-size: 1rem;
+    font-weight: 400;
+    opacity: 0.8;
+}
+
+.barra-filtros {
+    padding: 1rem 2rem;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.form-busqueda {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.form-busqueda input[type="text"] {
+    flex: 1;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+}
+
+.form-busqueda button {
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    border: none;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+}
+
+.filtros-categorias {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+}
+
+.filtros-categorias span {
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+.filtro-categoria {
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    border: 1px solid #d1d5db;
+    text-decoration: none;
+    color: #111827;
+    font-size: 0.85rem;
+}
+
+.filtro-categoria.activo {
+    background: #2563eb;
+    color: white;
+    border-color: #2563eb;
+}
+
+.filtro-destacados a {
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: #2563eb;
+}
+
+.grid-productos {
+    padding: 1.5rem 2rem 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.card-producto {
+    background: white;
+    border-radius: 12px;
+    padding: 0.75rem;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+}
+
+.card-producto.es-destacado {
+    border: 2px solid #f59e0b;
+}
+
+.contenedor-imagen {
+    position: relative;
+    width: 100%;
+    padding-top: 75%;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #f3f4f6;
+}
+
+.contenedor-imagen img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.imagen-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.etiqueta-destacado {
+    position: absolute;
+    top: 0.4rem;
+    left: 0.4rem;
+    background: #f59e0b;
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.15rem 0.45rem;
+    border-radius: 999px;
+}
+
+.info-producto h3 {
+    margin: 0.25rem 0 0;
+    font-size: 1rem;
+}
+
+.info-producto .precio {
+    margin: 0.25rem 0 0;
+    font-weight: 600;
+}
+
+.info-producto .categoria {
+    margin: 0.15rem 0 0;
+    font-size: 0.8rem;
+    color: #6b7280;
+}
