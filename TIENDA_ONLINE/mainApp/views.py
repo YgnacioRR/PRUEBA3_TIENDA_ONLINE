@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 from django.http import HttpResponse
-from .models import Producto, Categoria
+from django.urls import reverse
+from .models import Producto, Categoria, PlataformaOrigen, Pedido
+from .forms import PedidoForm
 
 # Create your views here.
 def cliente(req):
@@ -54,7 +56,50 @@ def producto_detalle(req, producto_id):
     return render(req, "producto_detalle.html", contexto)
 
 def solicitar_producto(request, producto_id):
-    # Vista temporal, luego aquí irá el formulario real (punto 9)
-    return HttpResponse(
-        f"Formulario de solicitud para el producto #{producto_id} (en construcción)."
-    )
+    producto = get_object_or_404(Producto, pk=producto_id)
+
+    if request.method == "POST":
+        form = PedidoForm(request.POST, request.FILES)
+        if form.is_valid():
+            pedido = form.save(commit=False)
+
+            # Producto de referencia
+            pedido.producto_referencia = producto
+
+            # Plataforma
+            plataforma_web, _ = PlataformaOrigen.objects.get_or_create(nombre="Página web")
+            pedido.plataforma_origen = plataforma_web
+
+            # Estado inicial y pago inicial según requisito
+            pedido.estado = "SOLICITADO"
+            pedido.estado_pago = "PENDIENTE"
+
+            # Guarda el pedido
+            pedido.save()
+
+            # URL de seguimiento usando el token
+            url_seguimiento = request.build_absolute_uri(
+                reverse("seguimiento_pedido", args=[pedido.token_seguimiento])
+            )
+
+            contexto_confirmacion = {
+                "pedido": pedido,
+                "url_seguimiento": url_seguimiento,
+            }
+            return render(request, "pedido_confirmacion.html", contexto_confirmacion)
+    else:
+        form = PedidoForm()
+
+    contexto = {
+        "form": form,
+        "producto": producto,
+    }
+    return render(request, "pedido_form.html", contexto)
+
+def seguimiento_pedido(request, token):
+    pedido = get_object_or_404(Pedido, token_seguimiento=token)
+
+    contexto = {
+        "pedido": pedido,
+    }
+    return render(request, "seguimiento_pedido.html", contexto)

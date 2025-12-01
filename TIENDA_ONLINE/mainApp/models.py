@@ -1,5 +1,5 @@
 from django.db import models
-
+import uuid
 # Create your models here.
 
 class Categoria(models.Model):
@@ -81,15 +81,17 @@ class Pedido(models.Model):
         ("PAGADO", "Pagado"),
     ]
 
-    # Datos del cliente para identificar el pedido
+    # Datos del cliente
     cliente_nombre = models.CharField(max_length=150)
-    descripcion = models.TextField()
-    plataforma_origen = models.ForeignKey(
-        PlataformaOrigen,
-        on_delete=models.PROTECT,
-        related_name="pedidos"
-    )
+    cliente_email = models.EmailField(blank=True)
+    cliente_telefono = models.CharField(max_length=30, blank=True)
+    cliente_red_social = models.CharField(max_length=100, blank=True, help_text="Usuario o enlace de red social")
 
+    # Producto de referencia (si proviene del catálogo)
+    producto_referencia = models.ForeignKey("Producto", on_delete=models.SET_NULL, null=True, blank=True, related_name="pedidos")
+    descripcion = models.TextField()
+    plataforma_origen = models.ForeignKey(PlataformaOrigen, on_delete=models.PROTECT, related_name="pedidos")
+    
     # Estado del pedido (punto 4)
     estado = models.CharField(
         max_length=20,
@@ -108,6 +110,12 @@ class Pedido(models.Model):
     imagen_referencia_1 = models.ImageField(upload_to="referencias/", blank=True, null=True)
     imagen_referencia_2 = models.ImageField(upload_to="referencias/", blank=True, null=True)
     imagen_referencia_3 = models.ImageField(upload_to="referencias/", blank=True, null=True)
+    creado = models.DateTimeField(auto_now_add=True)
+    actualizado = models.DateTimeField(auto_now=True)
+    
+    # Token único para seguimiento
+    token_seguimiento = models.CharField(max_length=50, unique=True, blank=True)
+
     creado = models.DateTimeField(auto_now_add=True)
     actualizado = models.DateTimeField(auto_now=True)
 
