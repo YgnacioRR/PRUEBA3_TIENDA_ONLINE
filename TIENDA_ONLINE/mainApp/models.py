@@ -40,11 +40,7 @@ class Insumo(models.Model):
     nombre = models.CharField(max_length=150)
     tipo = models.CharField(max_length=100)
     cantidad_disponible = models.DecimalField(max_digits=10, decimal_places=2)
-    unidad = models.CharField(
-        max_length=30,
-        blank=True,
-        help_text="Ej: unidades, kg, metros…"
-    )
+    unidad = models.CharField(max_length=30, blank=True, help_text="Ej: unidades, kg, metros…")
     marca = models.CharField(max_length=100, blank=True)
     color = models.CharField(max_length=50, blank=True)
     class Meta:
@@ -56,14 +52,13 @@ class Insumo(models.Model):
 
 
 class PlataformaOrigen(models.Model):
-    nombre = models.CharField(max_length=100, unique=True)
+    nombre = models.CharField(max_length=50)
+
     class Meta:
-        verbose_name = "Plataforma de origen"
-        verbose_name_plural = "Plataformas de origen"
         ordering = ["nombre"]
+    
     def __str__(self):
         return self.nombre
-    
 
 class Pedido(models.Model):
     ESTADOS_PEDIDO = [
@@ -93,18 +88,10 @@ class Pedido(models.Model):
     plataforma_origen = models.ForeignKey(PlataformaOrigen, on_delete=models.PROTECT, related_name="pedidos")
     
     # Estado del pedido (punto 4)
-    estado = models.CharField(
-        max_length=20,
-        choices=ESTADOS_PEDIDO,
-        default="SOLICITADO"
-    )
+    estado = models.CharField(max_length=20, choices=ESTADOS_PEDIDO, default="SOLICITADO")
 
     # Estado de pago (punto 5)
-    estado_pago = models.CharField(
-        max_length=20,
-        choices=ESTADOS_PAGO,
-        default="PENDIENTE"
-    )
+    estado_pago = models.CharField(max_length=20, choices=ESTADOS_PAGO, default="PENDIENTE")
 
     # Imágenes de referencia del cliente (punto 3)
     imagen_referencia_1 = models.ImageField(upload_to="referencias/", blank=True, null=True)
@@ -112,6 +99,8 @@ class Pedido(models.Model):
     imagen_referencia_3 = models.ImageField(upload_to="referencias/", blank=True, null=True)
     creado = models.DateTimeField(auto_now_add=True)
     actualizado = models.DateTimeField(auto_now=True)
+    
+    fecha_solicitada = models.DateField(null=True, blank=True)
     
     # Token único para seguimiento
     token_seguimiento = models.CharField(max_length=50, unique=True, blank=True)
