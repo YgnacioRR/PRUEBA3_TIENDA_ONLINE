@@ -76,52 +76,37 @@ class Pedido(models.Model):
         ("PAGADO", "Pagado"),
     ]
 
-    # Datos del cliente
     cliente_nombre = models.CharField(max_length=150)
     cliente_email = models.EmailField(blank=True)
     cliente_telefono = models.CharField(max_length=30, blank=True)
     cliente_red_social = models.CharField(max_length=100, blank=True, help_text="Usuario o enlace de red social")
-
-    # Producto de referencia (si proviene del catálogo)
     producto_referencia = models.ForeignKey("Producto", on_delete=models.SET_NULL, null=True, blank=True, related_name="pedidos")
     descripcion = models.TextField()
     plataforma_origen = models.ForeignKey(PlataformaOrigen, on_delete=models.PROTECT, related_name="pedidos")
-    
-    # Estado del pedido (punto 4)
     estado = models.CharField(max_length=20, choices=ESTADOS_PEDIDO, default="SOLICITADO")
-
-    # Estado de pago (punto 5)
     estado_pago = models.CharField(max_length=20, choices=ESTADOS_PAGO, default="PENDIENTE")
-
-    # Imágenes de referencia del cliente (punto 3)
     imagen_referencia_1 = models.ImageField(upload_to="referencias/", blank=True, null=True)
     imagen_referencia_2 = models.ImageField(upload_to="referencias/", blank=True, null=True)
     imagen_referencia_3 = models.ImageField(upload_to="referencias/", blank=True, null=True)
-    creado = models.DateTimeField(auto_now_add=True)
-    actualizado = models.DateTimeField(auto_now=True)
-    
     fecha_solicitada = models.DateField(null=True, blank=True)
-    
-    # Token único para seguimiento
     token_seguimiento = models.CharField(max_length=50, unique=True, blank=True)
-
     creado = models.DateTimeField(auto_now_add=True)
     actualizado = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-creado"]
+
     def __str__(self):
         return f"Pedido #{self.id} - {self.cliente_nombre}"
+
     def clean(self):
-        """
-        Punto 3:
-        No se puede finalizar un pedido si no está pagado completamente.
-        """
         from django.core.exceptions import ValidationError
         if self.estado == "FINALIZADA" and self.estado_pago != "PAGADO":
             raise ValidationError(
                 "No se puede marcar el pedido como FINALIZADA si el pago no está PAGADO."
             )
+
     def save(self, *args, **kwargs):
-        self.full_clean()
+        if not self.token_seguimiento:
+            self.token_seguimiento = uuid.uuid4().hex
         super().save(*args, **kwargs)
