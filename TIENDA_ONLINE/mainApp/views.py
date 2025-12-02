@@ -4,6 +4,10 @@ from django.http import HttpResponse
 from django.urls import reverse
 from .models import Producto, Categoria, PlataformaOrigen, Pedido
 from .forms import PedidoForm
+from .models import Valoracion
+from .forms import ValoracionForm
+from django.http import HttpResponseForbidden
+
 
 # Create your views here.
 def cliente(req):
@@ -103,3 +107,26 @@ def seguimiento_pedido(request, token):
         "pedido": pedido,
     }
     return render(request, "seguimiento_pedido.html", contexto)
+
+def valorar_pedido(request, token):
+    pedido = get_object_or_404(Pedido, token_seguimiento=token)
+
+    # Solo se puede valorar cuando está ENTREGADO o FINALIZADO
+    if pedido.estado not in ["ENTREGADA", "FINALIZADA"]:
+        return HttpResponseForbidden("Este pedido aún no está listo para ser valorado.")
+
+    # Si ya existe valoración, no permitir repetir
+    if hasattr(pedido, "valoracion"):
+        return render(request, "valoracion_existente.html", {"pedido": pedido})
+
+    if request.method == "POST":
+        form = ValoracionForm(request.POST)
+        if form.is_valid():
+            valoracion = form.save(commit=False)
+            valoracion.pedido = pedido
+            valoracion.save()
+            return render(request, "valoracion_gracias.html", {"pedido": pedido})
+    else:
+        form = ValoracionForm()
+
+    return render(request, "valoracion_pedido.html", {"pedido": pedido, "form": form})

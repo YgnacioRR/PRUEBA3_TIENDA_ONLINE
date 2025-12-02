@@ -1,6 +1,6 @@
 from django import forms
 from .models import Pedido
-
+from .models import Valoracion
 
 class PedidoForm(forms.ModelForm):
     class Meta:
@@ -39,4 +39,14 @@ class PedidoForm(forms.ModelForm):
             "imagen_referencia_1": "Imagen de referencia 1",
             "imagen_referencia_2": "Imagen de referencia 2",
             "imagen_referencia_3": "Imagen de referencia 3",
+        }
+
+class ValoracionForm(forms.ModelForm):
+    class Meta:
+        model = Valoracion
+        fields = ["puntaje", "comentario"]
+
+        widgets = {
+            "puntaje": forms.Select(attrs={"class": "form-control"}),
+            "comentario": forms.Textarea(attrs={"class": "form-control", "rows": 4}),
         }

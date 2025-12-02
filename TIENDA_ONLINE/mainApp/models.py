@@ -110,3 +110,12 @@ class Pedido(models.Model):
         if not self.token_seguimiento:
             self.token_seguimiento = uuid.uuid4().hex
         super().save(*args, **kwargs)
+
+class Valoracion(models.Model):
+    pedido = models.OneToOneField(Pedido, on_delete=models.CASCADE, related_name="valoracion")
+    puntaje = models.IntegerField(choices=[(i, str(i)) for i in range(1, 5+1)])
+    comentario = models.TextField(blank=True)
+    creado = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Valoración del Pedido #{self.pedido.id} - {self.puntaje} estrellas"

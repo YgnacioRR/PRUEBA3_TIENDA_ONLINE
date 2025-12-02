@@ -99,7 +99,17 @@
                                 No se adjuntaron imágenes de referencia para este pedido.
                             </p>
                         {% endif %}
-
+                        {% if pedido.estado == "ENTREGADA" or pedido.estado == "FINALIZADA" %}
+                            <div class="mt-4">
+                                {% if pedido.valoracion %}
+                                    <p class="text-success fw-bold">Este pedido ya fue valorado ⭐</p>
+                                {% else %}
+                                    <a href="{% url 'valorar_pedido' pedido.token_seguimiento %}" class="btn btn-warning">
+                                        Valorar este pedido ⭐
+                                    </a>
+                                {% endif %}
+                            </div>
+                        {% endif %}
                         <p class="mt-4 text-muted small">
                             Esta página es de solo consulta y sirve para que el cliente
                             pueda revisar el avance de su pedido.

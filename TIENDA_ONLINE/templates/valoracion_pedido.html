@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Valorar pedido</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <h2 class="text-center">Valorar Pedido #{{ pedido.id }}</h2>
+
+    <p class="text-muted text-center">Tu opinión nos ayuda a mejorar.</p>
+
+    <form method="post" class="card p-4 shadow-sm">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label>Puntaje (1 a 5 estrellas)</label>
+            {{ form.puntaje }}
+        </div>
+
+        <div class="mb-3">
+            <label>Comentario (opcional)</label>
+            {{ form.comentario }}
+        </div>
+
+        <button class="btn btn-success w-100">Enviar valoración</button>
+    </form>
+
+    <div class="text-center mt-3">
+        <a href="{% url 'seguimiento_pedido' pedido.token_seguimiento %}" class="btn btn-secondary">
+            Volver al seguimiento
+        </a>
+    </div>
+</div>
+</body>
+</html>

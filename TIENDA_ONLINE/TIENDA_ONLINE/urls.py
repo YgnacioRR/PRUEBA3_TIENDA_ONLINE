@@ -10,6 +10,7 @@ urlpatterns = [
     path("producto/<int:producto_id>/", views.producto_detalle, name="producto_detalle"),
     path("producto/<int:producto_id>/solicitar/", views.solicitar_producto, name="solicitar_producto"),
     path("seguimiento/<str:token>/", views.seguimiento_pedido, name="seguimiento_pedido"),
+    path("seguimiento/<str:token>/valorar/", views.valorar_pedido, name="valorar_pedido"),
     path('', views.cliente, name="cliente"),
 ]
 
